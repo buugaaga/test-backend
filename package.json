@@ -1,0 +1,22 @@
+{
+  "name": "test-backend",
+  "version": "1.0.0",
+  "description": "node, crud, typescript, express ",
+  "main": "index.js",
+  "scripts": {
+    "tsc": "tsc",
+    "dev": "tsnd --respawn index.ts"
+  },
+  "repository": "https://github.com/buugaaga/test-backend.git",
+  "author": "El'dar Nasyrov <buugaaga@bk.ru>",
+  "license": "MIT",
+  "devDependencies": {
+    "@types/express": "^4.17.3",
+    "ts-node-dev": "^1.0.0-pre.44",
+    "tsc": "^1.20150623.0",
+    "typescript": "^3.8.3"
+  },
+  "dependencies": {
+    "express": "^4.17.1"
+  }
+}
