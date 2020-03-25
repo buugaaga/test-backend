@@ -1,11 +1,23 @@
-import Express, { Application, Request, Response } from 'express';
+import Express, { Application, Request, Response } from 'express'
+import bodyParser from 'body-parser'
+import fs from 'fs'
+import { IUsers } from './types'
 
-const app: Application = Express();
+const port = process.env.PORT || 3000
 
-app.get('/', (req: Request, res: Response) => {
-    res.send('Hello im Node.js & TypeScript starter! and am Ildar');
-});
+const app: Application = Express()
 
-app.listen(3000, _ => {
-    console.info('Application listening on http://localhost:3000');
-});
+// const jsonParser = bodyParser.json()
+
+app.use(Express.static(`${__dirname}/data`))
+
+app.get('/api/users', (req, res) => {
+    let content: string = fs.readFileSync('data/users.json', 'utf8')
+    let users: IUsers[] = JSON.parse(content)
+    res.send(users)
+})
+
+
+app.listen(port, () => {
+    console.info('server started')
+})
