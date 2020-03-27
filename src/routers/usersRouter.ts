@@ -4,15 +4,9 @@ import bodyParser from 'body-parser'
 
 import { IUser } from '../../types'
 
-const jsonParser = bodyParser()
+const jsonParser = bodyParser.json()
 
 export const usersRouter = Router()
-
-usersRouter.use('/', (req, res) => {
-  let content: string = fs.readFileSync('data/users.json', 'utf8')
-  let users: IUser[] = JSON.parse(content)
-  res.send(users)
-})
 
 usersRouter.get('/:id', (req, res) => {
   let id: string = req.params.id 
@@ -24,6 +18,12 @@ usersRouter.get('/:id', (req, res) => {
   } else {
       res.status(404).send()
   }
+})
+
+usersRouter.use('/', (req, res) => {
+  let content: string = fs.readFileSync('data/users.json', 'utf8')
+  let users: IUser[] = JSON.parse(content)
+  res.send(users)
 })
 
 usersRouter.post('/', jsonParser, (req, res) => {

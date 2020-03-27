@@ -5,7 +5,7 @@ import Express, { Application, Request, Response } from 'express'
 // import { IUser } from './types'
 import { apiRouter } from './src/routers'
 
-const port = process.env.PORT || 3000
+const port = process.env.PORT || 3003
 
 const app: Application = Express()
 

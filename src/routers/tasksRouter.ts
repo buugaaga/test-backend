@@ -1,105 +1,89 @@
 import { Router } from 'express'
 import fs from 'fs'
+import bodyParser from 'body-parser'
 
-import { ITask } from '../../types'
+import { ITask, IUser } from '../../types'
+
+const jsonParser = bodyParser.json()
 
 export const tasksRouter = Router()
 
-tasksRouter.use('/', (req, res) => {
-  res.send('hello from tasks')
+const tasksData: string = fs.readFileSync('data/tasks.json', 'utf8')
+const tasks: ITask[] = JSON.parse(tasksData)
+const usersData: string = fs.readFileSync('data/users.json', 'utf8')
+const users: IUser = JSON.parse(usersData)
+
+// ищу задачу по id например '/api/tasks/2'
+tasksRouter.get('/:id', (req, res) => {
+  const task: ITask | undefined = tasks.find( obj => obj.id === +req.params.id)
+  if(task) {
+    res.send(task)
+  } else {
+    res.send('нет задачи с таким номером')
+  }
 })
 
+//ищу задачу по userId, которая находится в запросе например в таком: '/api/tasks/?userId=3'
+tasksRouter.get('/', (req, res) => {
+  console.log(req.query)
+  if(req.query) {
+    const task: ITask[] | []  = tasks.filter( obj => obj.userId === +req.query.userId)
+    if(task.length > 0) {
+      res.send(task)
+    } else {
+      res.send('у этого пользователя нет задач')
+    }
+  }
 
-
-// tasksRouter.get('/users', (req, res) => {
-//   let content: string = fs.readFileSync('data/users.json', 'utf8')
-//   let users: IUser[] = JSON.parse(content)
-//   res.send(users)
-// })
-
-// tasksRouter.get('/users/:id', (req, res) => {
-//   let id: string = req.params.id 
-//   let content: string = fs.readFileSync('data/users.json', 'utf8')
-//   let users: IUser[] = JSON.parse(content)
-//   let user: IUser | undefined = users.find( item => item.id === +id)
-//   if(user) {
-//       res.send(user)
-//   } else {
-//       res.status(404).send()
-//   }
-// })
-
-// usersRouter.post('/users', jsonParser, (req, res) => {
-//   if(!req.body) res.sendStatus(404)
+  res.send(tasks)
   
-//   let user = {} as IUsers
-//   user.name = req.body.name
-//   user.age = req.body.age
+})
 
-//   let data = fs.readFileSync('data/users.json', 'utf8')
-//   let users: IUsers[] = JSON.parse(data)
-
-//   //find max id
-//   let id = Math.max(...users.map( item => item.id))
-  
-//   user.id = id + 1
-//   users.push(user)
-
-//   let readyData = JSON.stringify(users, null, 2)
-
-//   //rewrite users.json with new data
-//   fs.writeFileSync('data/users.json', readyData)
-//   res.send(user)
+//выдает список всех задач
+// tasksRouter.get('/', (req, res) => {
+//   res.send(tasks)
 // })
 
-// usersRouter.delete('/users/:id', (req, res) => {
+//метод POST для создания задачи
+tasksRouter.post('/', jsonParser, (req, res) => {
+  if(!req.body) res.sendStatus(404)
 
-//   let id: string = req.params.id
-//   let data: string = fs.readFileSync('data/users.json', 'utf8')
-//   let users: IUsers[] = JSON.parse(data)
+  let userId: number | undefined = +req.body.userId
+  let title: string = req.body.title
+  let completed: boolean = req.body.completed
 
-//   let index = -1
-//   for(let i = 0; i < users.length; i++ ) {
-//       if(users[i].id === +id) {
-//           index = i
-//       }
-//   }
+  let id: number = Math.max(...tasks.map( obj => obj.id)) + 1
+
+  let task: ITask = {
+    userId,
+    id,
+    title,
+    completed
+  }
+
+  tasks.push(task)
+  fs.writeFileSync('data/tasks.json', JSON.stringify(tasks, null, 2))
+  res.send(task)
+})
+
+//метод DELETE по id, например: '/api/tasks/3'
+tasksRouter.delete('/:id', (req, res) => {
+  let id: number = +req.params.id 
+  let index = -1
+  let task = {} as ITask
+  for(let i = 0; i < tasks.length; i++ ) {
+    if(tasks[i].id === id) {
+      index = i
+      task = tasks[i]
+      break
+    }
+  }
+  if(index > 0) {
+    tasks.splice(index, 1)
+    res.send(task)
+  } else {
+    res.sendStatus(404)
+  }
+   
   
-//   if (index > -1) {
-//       let user = users.splice(index, 1)
-//       let data = JSON.stringify(users, null, 2)
-//       fs.writeFileSync('data/users.json', data)
-//       res.send(user)
-//   } else {
-//       res.status(404).send()
-//   }
-// })
-
-// usersRouter.put('/users', jsonParser, (req, res) => {
-//   if(!req.body) res.status(400).send()
-
-//   let userId: string = req.body.id
-//   let userName: string = req.body.name
-//   let userAge: string = req.body.age
-
-//   let data: string = fs.readFileSync('data/users.json', 'utf8')
-//   let users: IUsers[] = JSON.parse(data)
-
-//   let user = {} as IUsers
-//   for (let itemObj of users) {
-//       if(itemObj.id === +userId) {
-//           user = itemObj
-//           break
-//       }
-//   }
-//   //change data of user
-//   if(user) {
-//       user.age = +userAge
-//       user.name = userName
-//       fs.writeFileSync('data/users.json', JSON.stringify(users, null, 2))
-//       res.send(user)
-//   } else {
-//       res.status(400).send(user)
-//   }
-  
-// })
+})
