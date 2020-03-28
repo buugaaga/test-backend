@@ -1,10 +1,9 @@
-import { Router, Request, Response } from 'express'
+import Express, { Router, Request, Response } from 'express'
 import fs from 'fs'
-import bodyParser from 'body-parser'
 
 import { IUser } from '../../types'
 
-const jsonParser = bodyParser.json()
+const jsonParser = Express.json()
 
 export const usersRouter = Router()
 

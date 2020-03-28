@@ -1,10 +1,10 @@
-import { Router } from 'express'
+import Express, { Router } from 'express'
 import fs from 'fs'
-import bodyParser from 'body-parser'
+// import bodyParser from 'body-parser'
 
 import { ITask, IUser } from '../../types'
 
-const jsonParser = bodyParser.json()
+const jsonParser = Express.json()
 
 export const tasksRouter = Router()
 
@@ -24,17 +24,17 @@ tasksRouter.get('/:id', (req, res) => {
 })
 
 //ищу задачу по userId, которая находится в запросе например в таком: '/api/tasks/?userId=3'
-tasksRouter.get('/', (req, res) => {
-  console.log(req.query)
-    const task: ITask[] | []  = tasks.filter( obj => obj.userId === +req.query.userId)
-    if(task.length > 0) {
-      res.send(task)
-    } else {
-      res.send('у этого пользователя нет задач')
-    }
-  res.send(tasks)
+// tasksRouter.get('?userId=:userId', (req, res) => {
+//   console.log(req.query)
+//     const task: ITask[] | []  = tasks.filter( obj => obj.userId === +req.query.userId)
+//     if(task.length > 0) {
+//       res.send(task)
+//     } else {
+//       res.send('у этого пользователя нет задач')
+//     }
+//   res.send(tasks)
   
-})
+// })
 
 // выдает список всех задач
 tasksRouter.get('/', (req, res) => {
@@ -45,9 +45,6 @@ tasksRouter.get('/', (req, res) => {
 tasksRouter.post('/', jsonParser, (req, res) => {
   if(!req.body) res.sendStatus(404)
 
-  // const userId: number | undefined = +req.body.userId
-  // const title: string = req.body.title
-  // const completed: boolean = req.body.completed
   const { userId, title, completed }: ITask = req.body
 
   const id: number = Math.max(...tasks.map( obj => obj.id)) + 1
