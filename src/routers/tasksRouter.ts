@@ -26,35 +26,33 @@ tasksRouter.get('/:id', (req, res) => {
 //ищу задачу по userId, которая находится в запросе например в таком: '/api/tasks/?userId=3'
 tasksRouter.get('/', (req, res) => {
   console.log(req.query)
-  if(req.query) {
     const task: ITask[] | []  = tasks.filter( obj => obj.userId === +req.query.userId)
     if(task.length > 0) {
       res.send(task)
     } else {
       res.send('у этого пользователя нет задач')
     }
-  }
-
   res.send(tasks)
   
 })
 
-//выдает список всех задач
-// tasksRouter.get('/', (req, res) => {
-//   res.send(tasks)
-// })
+// выдает список всех задач
+tasksRouter.get('/', (req, res) => {
+  res.send(tasks)
+})
 
 //метод POST для создания задачи
 tasksRouter.post('/', jsonParser, (req, res) => {
   if(!req.body) res.sendStatus(404)
 
-  let userId: number | undefined = +req.body.userId
-  let title: string = req.body.title
-  let completed: boolean = req.body.completed
+  // const userId: number | undefined = +req.body.userId
+  // const title: string = req.body.title
+  // const completed: boolean = req.body.completed
+  const { userId, title, completed }: ITask = req.body
 
-  let id: number = Math.max(...tasks.map( obj => obj.id)) + 1
+  const id: number = Math.max(...tasks.map( obj => obj.id)) + 1
 
-  let task: ITask = {
+  const task: ITask = {
     userId,
     id,
     title,
@@ -68,9 +66,10 @@ tasksRouter.post('/', jsonParser, (req, res) => {
 
 //метод DELETE по id, например: '/api/tasks/3'
 tasksRouter.delete('/:id', (req, res) => {
-  let id: number = +req.params.id 
-  let index = -1
+  const id: number = +req.params.id 
+
   let task = {} as ITask
+  let index = -1
   for(let i = 0; i < tasks.length; i++ ) {
     if(tasks[i].id === id) {
       index = i
@@ -84,6 +83,4 @@ tasksRouter.delete('/:id', (req, res) => {
   } else {
     res.sendStatus(404)
   }
-   
-  
 })

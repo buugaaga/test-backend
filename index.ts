@@ -1,15 +1,10 @@
 import Express, { Application, Request, Response } from 'express'
-// import bodyParser from 'body-parser'
-// import fs from 'fs'
 
-// import { IUser } from './types'
 import { apiRouter } from './src/routers'
 
 const port = process.env.PORT || 3003
 
 const app: Application = Express()
-
-// const jsonParser = bodyParser.json()
 
 app.use(Express.static(`${__dirname}/data`))
 
