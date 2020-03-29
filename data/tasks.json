@@ -1,5 +1,23 @@
 [
   {
+    "userId": 7,
+    "id": 1,
+    "title": "change title via the postman",
+    "completed": true
+  },
+  {
+    "userId": 6,
+    "id": 2,
+    "title": "two task",
+    "completed": false
+  },
+  {
+    "userId": 3,
+    "id": 3,
+    "title": "three task",
+    "completed": false
+  },
+  {
     "userId": 1,
     "id": 4,
     "title": "one userId",
@@ -10,5 +28,16 @@
     "id": 5,
     "title": "как дела",
     "completed": false
+  },
+  {
+    "userId": 2,
+    "id": 6,
+    "title": "bubububu",
+    "completed": true
+  },
+  {
+    "id": 7,
+    "title": "added title via postman",
+    "completed": true
   }
 ]

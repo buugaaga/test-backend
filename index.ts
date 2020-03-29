@@ -1,6 +1,6 @@
 import Express, { Application, Request, Response } from 'express'
 
-import { apiRouter } from './src/routers'
+import { usersRouter, tasksRouter } from './src/routers'
 
 const port = process.env.PORT || 3003
 
@@ -8,7 +8,9 @@ const app: Application = Express()
 
 app.use(Express.static(`${__dirname}/data`))
 
-app.use('/api', apiRouter)
+app.use('/api/users', usersRouter)
+app.use('/api/tasks', tasksRouter)
+
 
 
 app.listen(port, () => {

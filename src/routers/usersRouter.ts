@@ -31,7 +31,7 @@ usersRouter.post('/', jsonParser, (req, res) => {
   user.name = req.body.name
   user.age = req.body.age
 
-  //find max id
+  //find max id value in the users arr
   let id = Math.max(...users.map( item => item.id))
   
   user.id = id + 1
