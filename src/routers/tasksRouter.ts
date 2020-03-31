@@ -3,15 +3,15 @@ import fs from 'fs'
 // import bodyParser from 'body-parser'
 
 import { ITask, IUser } from '../../types'
+import api from '../utils'
 
 const jsonParser = Express.json()
 
 export const tasksRouter = Router()
 
-const tasksData: string = fs.readFileSync('data/tasks.json', 'utf8')
-const tasks: ITask[] = JSON.parse(tasksData)
-const usersData: string = fs.readFileSync('data/users.json', 'utf8')
-const users: IUser = JSON.parse(usersData)
+const apiTask = api('tasks')
+
+const tasks: ITask[] = apiTask.getData()
 
 // ищу задачу по id например '/api/tasks/2'
 tasksRouter.get('/:id', (req, res) => {

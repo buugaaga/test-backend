@@ -2,17 +2,22 @@ import Express, { Router, Request, Response } from 'express'
 import fs from 'fs'
 
 import { IUser } from '../../types'
+import api from '../utils'
+
 
 const jsonParser = Express.json()
 
 export const usersRouter = Router()
 
-const data: string = fs.readFileSync('data/users.json', 'utf8')
-const users: IUser[] = JSON.parse(data)
+const apiUser = api('users')
+
+// const data: string = fs.readFileSync('data/users.json', 'utf8')
+const users: IUser[] = apiUser.getData()
 
 usersRouter.get('/:id', (req: Request, res: Response) => {
-  let { id }: Request["params"] = req.params
-  let user: IUser | undefined = users.find( item => item.id === +id)
+  const { id }: Request["params"] = req.params
+  // const user: IUser | undefined = users.find( item => item.id === +id)
+  const user = apiUser.getDataById(id)
   if(user) {
       res.send(user)
   } else {
